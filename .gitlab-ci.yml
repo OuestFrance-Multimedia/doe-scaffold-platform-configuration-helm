@@ -1,0 +1,52 @@
+# variables:
+#  PLATFORMS: app1-production,app1-preproduction
+#  BRANCHES: prod,noprod
+
+stages:
+  - init-repository
+
+init-repository:
+  stage: init-repository
+  # when: manual
+  # only:
+  #   - web
+  script:
+  ## SSH Configuration
+  - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+  - cat ${SSH_PRIVATE_KEY} > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+  - ssh-keyscan gitlab.com > ~/.ssh/known_hosts
+  - ssh -q -T git@gitlab.com
+
+  ## GIT Configuration
+  - git config --global user.name $GITLAB_USER_LOGIN
+  - git config --global user.email $GITLAB_USER_EMAIL
+
+  ## Clone, commit & push
+  - git clone ${SSH_URL_TO_MANIFEST_REPO} && cd "$(basename "$_" .git)"
+  - |
+    cat << 'EOF' > /usr/local/bin/init-git.sh
+      #!/bin/bash
+      set -xe
+      branches=(`echo $1 | tr ',' ' '`)
+      platforms=(`echo $2 | tr ',' ' '`)
+      for branch in ${branches[@]}; do
+        existed_in_local=$(git branch --list ${branch}) # existed_in_remote=$(git ls-remote --heads origin ${branch})
+        if [[ -z ${existed_in_local} ]]; then
+          git branch ${branch}
+        fi
+        git checkout ${branch}
+        if [[ ! -f values.yaml ]]; then
+          touch values.yaml
+          git add . && git commit -m "create values.yaml"
+          git push origin ${branch}
+        fi
+        for p in ${platforms[@]}; do 
+          if [[ ! -f values-${p}.yaml ]]; then
+            touch values-${p}.yaml && git add . && git commit -m "create values-${p}.yaml"
+            git push origin ${branch}
+          fi
+        done
+        git checkout master
+      done
+    EOF
+  - chmod +x /usr/local/bin/init-git.sh && /usr/local/bin/init-git.sh $BRANCHES $PLATFORMS
