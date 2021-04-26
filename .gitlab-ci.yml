@@ -14,8 +14,9 @@ init-repository:
   ## SSH Configuration
   - mkdir -p ~/.ssh && chmod 700 ~/.ssh
   - cat ${SSH_PRIVATE_KEY} > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-  - ssh-keyscan gitlab.com > ~/.ssh/known_hosts
-  - ssh -q -T git@gitlab.com
+  - export SSH_HOST=$(echo $SSH_URL_TO_MANIFEST_REPO|sed -r 's/^git@([^:]+).*$/\1/')
+  - ssh-keyscan $SSH_HOST > ~/.ssh/known_hosts
+  - ssh -q -T git@$SSH_HOST
 
   ## GIT Configuration
   - git config --global user.name $GITLAB_USER_LOGIN
