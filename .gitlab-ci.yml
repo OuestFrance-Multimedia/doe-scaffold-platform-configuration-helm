@@ -1,0 +1,62 @@
+---
+image:
+  name: alpine/helm
+  entrypoint: [""]
+
+.template_lint: &template_lint
+  stage: lint
+  script:
+    - helm lint . -f values-${CI_PROJECT_NAME/platform-configuration-helm-/}-${CI_JOB_NAME/lint-/}.yaml
+
+.template_lint_restricted: &template_lint_restricted
+  <<: *template_lint
+  only:
+    - restricted
+
+.template_lint_exept_restricted: &template_lint_exept_restricted
+  <<: *template_lint
+  except:
+    - restricted
+
+.template_render: &template_render
+  stage: render
+  script:
+    - helm template . -f values-${CI_PROJECT_NAME/platform-configuration-helm-/}-${CI_JOB_NAME/render-/}.yaml > ${CI_PROJECT_NAME/platform-configuration-helm-/}-${CI_JOB_NAME/render-/}.yaml
+    - cat ${CI_PROJECT_NAME/platform-configuration-helm-/}-${CI_JOB_NAME/render-/}.yaml
+  artifacts:
+    paths:
+      - ${CI_PROJECT_NAME/platform-configuration-helm-/}-${CI_JOB_NAME/render-/}.yaml
+    expire_in: 1 week
+
+.template_render_restricted: &template_render_restricted
+  <<: *template_render
+  only:
+    - restricted
+
+.template_render_exept_restricted: &template_render_exept_restricted
+  <<: *template_render
+  except:
+    - restricted
+
+stages:
+  - lint
+  - render
+
+lint-rec1:
+  <<: *template_lint_exept_restricted
+
+lint-preprod:
+  <<: *template_lint_restricted
+
+lint-prod:
+  <<: *template_lint_restricted
+
+render-rec1:
+  <<: *template_render_exept_restricted
+
+render-preprod:
+  <<: *template_render_restricted
+
+render-prod:
+  <<: *template_render_restricted
+
