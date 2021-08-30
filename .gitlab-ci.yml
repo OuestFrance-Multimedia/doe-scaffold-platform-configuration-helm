@@ -12,6 +12,7 @@ image:
 
 .template_render: &template_render
   stage: render
+  when: manual
   script:
     - test -f values-${CI_PROJECT_NAME/platform-configuration-helm-/}-${CI_JOB_NAME/render-/}.yaml
     - helm template . -f values-${CI_PROJECT_NAME/platform-configuration-helm-/}-${CI_JOB_NAME/render-/}.yaml > ${CI_PROJECT_NAME/platform-configuration-helm-/}-${CI_JOB_NAME/render-/}.yaml
