@@ -80,3 +80,7 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+env: 
+  fromValues: 
+    ENV: default-env-value
