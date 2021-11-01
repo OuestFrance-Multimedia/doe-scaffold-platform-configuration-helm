@@ -1,13 +1,4 @@
 ---
-volumesAndMounts:
-  volumes:
-    - name: dev
-      hostPath:
-        path: /workspace/content-app-demo/sources # matches kind containerPath:
-  volumeMounts:
-    - name: dev
-      mountPath: /usr/share/nginx/html/ # in the container filesystem
-
 env:
   fromValues:
     ENV: kind
