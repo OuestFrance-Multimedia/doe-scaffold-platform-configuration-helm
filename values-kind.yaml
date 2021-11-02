@@ -12,11 +12,14 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tls:
+   - secretName: app1-tls
+     hosts:
+       - *host
 
 env:
   fromValues:
     ENV: kind
+
+certmanager_selfSigned:
+  enabled: true

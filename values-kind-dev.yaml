@@ -12,10 +12,10 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tls:
+   - secretName: app1-dev-tls
+     hosts:
+       - *host
 
 volumesAndMounts:
   volumes:
@@ -43,3 +43,6 @@ volumesAndMounts:
 env:
   fromValues:
     ENV: kind-dev
+
+certmanager_selfSigned:
+  enabled: true

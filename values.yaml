@@ -103,3 +103,6 @@ volumesAndMounts:
 env:
   fromValues:
     ENV: default-env-value
+
+certmanager_selfSigned:
+  enabled: false
