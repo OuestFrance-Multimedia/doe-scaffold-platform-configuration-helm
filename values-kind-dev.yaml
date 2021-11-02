@@ -1,5 +1,5 @@
 ---
-_host: &host demo-dev.demo.lan
+_host: &host app1-dev.demo.lan
 
 ingress:
   enabled: true
