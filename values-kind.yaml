@@ -13,6 +13,10 @@ volumesAndMounts:
       subPath: default.conf
       readOnly: true
     - name: vol-nginx
+      mountPath: /etc/nginx/fetch_env.js
+      subPath: fetch_env.js
+      readOnly: true
+    - name: vol-nginx
       mountPath: /etc/nginx/nginx.conf
       subPath: nginx.conf
       readOnly: true

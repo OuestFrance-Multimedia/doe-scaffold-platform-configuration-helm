@@ -16,7 +16,7 @@ data:
         location / {
             root   /usr/share/nginx/html;
             index  index.html index.htm;
-            sub_filter 'Guys' 'Boys';
+            sub_filter '[ENV]' $env;
             sub_filter_once on;
         }
 
@@ -52,7 +52,15 @@ data:
         #    deny  all;
         #}
     }
+  fetch_env.js: |
+    function fetch_env(r) {
+      return process.env.ENV;
+    }
   nginx.conf: |
+    load_module modules/ngx_http_js_module.so;
+
+    env ENV;
+
     user  nginx;
     worker_processes  auto;
 
@@ -66,6 +74,8 @@ data:
 
 
     http {
+        js_include fetch_env.js;
+        js_set $env fetch_env;
         include       /etc/nginx/mime.types;
         default_type  application/octet-stream;
 
