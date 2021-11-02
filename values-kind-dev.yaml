@@ -21,7 +21,7 @@ volumesAndMounts:
   volumes:
     - name: dev
       hostPath:
-        path: /workspace/content-app-demo/sources # matches kind containerPath:
+        path: /workspace/content-app-app1/sources # matches kind containerPath:
     - name: vol-nginx
       configMap:
         name: cm-nginx
