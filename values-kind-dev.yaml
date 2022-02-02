@@ -37,4 +37,4 @@ volumesAndMounts:
 
 env:
   fromValues:
-    ENV: kind-dev
+    ENV: environnement-app1-dev
