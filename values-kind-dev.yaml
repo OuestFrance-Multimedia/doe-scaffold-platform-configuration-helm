@@ -37,4 +37,4 @@ volumesAndMounts:
 
 env:
   fromValues:
-    ENV: environnement-app1-dev
+    APP: app1-dev

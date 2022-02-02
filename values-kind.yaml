@@ -13,4 +13,4 @@ ingress:
 
 env:
   fromValues:
-    ENV: environnement-app1
+    APP: app1
