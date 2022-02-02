@@ -17,7 +17,8 @@ data:
             root   /usr/share/nginx/html;
             index  index.html index.htm;
             sub_filter '[APP]' $app;
-            sub_filter_once on;
+            sub_filter '[ENV]' $env;
+            sub_filter_once off;
         }
 
         #error_page  404              /404.html;
@@ -53,8 +54,11 @@ data:
         #}
     }
   fetch_env.js: |
-    function fetch_env(r) {
+    function fetch_app(r) {
       return process.env.APP;
+    }
+    function fetch_env(r) {
+      return process.env.ENV;
     }
   nginx.conf: |
     load_module modules/ngx_http_js_module.so;
@@ -75,7 +79,8 @@ data:
 
     http {
         js_include fetch_env.js;
-        js_set $app fetch_env;
+        js_set $app fetch_app;
+        js_set $env fetch_env;
         include       /etc/nginx/mime.types;
         default_type  application/octet-stream;
 

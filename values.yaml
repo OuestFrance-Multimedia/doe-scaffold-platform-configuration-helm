@@ -101,4 +101,5 @@ volumesAndMounts:
 
 env:
   fromValues:
-    ENV: default-env-value
+    APP: app1
+    ENV: ""
